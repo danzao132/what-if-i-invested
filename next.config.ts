@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // Also covers non-HTML responses (API JSON, share images).
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
         ],
       },
     ];

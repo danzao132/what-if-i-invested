@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Pick an amount. Pick a date. Discover what could have been. See what any investment in US stocks and ETFs would be worth today.",
   openGraph: { siteName: "What If I Invested?", type: "website", images: ["/api/og"] },
   twitter: { card: "summary_large_image" },
+  // Friends-only for now: keep search engines from listing the site.
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 
 export const viewport: Viewport = {
