@@ -14,6 +14,7 @@ import { ShareResult } from "../ShareResult";
 import { StockSearch } from "../StockSearch";
 import { AnimatedNumber } from "../ui/AnimatedNumber";
 import { TickerLogo } from "../ui/Logo";
+import { MarketCap } from "../ui/MarketCap";
 import { InvestmentValueChart } from "./InvestmentValueChart";
 import { TimelineStage } from "./TimelineStage";
 
@@ -243,11 +244,18 @@ export function TimeMachine({
               )}
             </div>
             {ok && (
+              <div className="space-y-2">
               <dl className="grid grid-cols-3 gap-2 text-sm sm:gap-3">
                 <Stat label="Per year (CAGR)" value={result.cagr != null ? pct(result.cagr) : "n/a"} hint={result.cagr == null ? "Shown for 1+ years" : undefined} />
                 <Stat label="Time invested" value={result.durationLabel} />
                 <Stat label="Shares bought" value={result.shares >= 100 ? result.shares.toFixed(1) : result.shares.toFixed(result.shares < 1 ? 4 : 2)} />
               </dl>
+                {/* Today's value only: historical market caps need share-count history we don't have. */}
+                <div className="flex items-end justify-between gap-3 rounded-2xl border border-line bg-surface/70 p-2.5 backdrop-blur sm:p-3">
+                  <MarketCap value={quote.data?.marketCap} type={quote.data?.type ?? universeEntry(symbol)?.type} size="sm" />
+                  {quote.data?.marketCap != null && <span className="shrink-0 text-[11px] text-ink-3">{shortName} today</span>}
+                </div>
+              </div>
             )}
           </div>
 
