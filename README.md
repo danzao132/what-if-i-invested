@@ -92,7 +92,7 @@ Refresh the snapshots with `npm run snapshot` (or `node scripts/snapshot-fixture
 
 ## Deploying (Vercel)
 
-Live at **https://what-if-i-invested.vercel.app**. The Vercel project `what-if-i-invested` is connected to this GitHub repo: every push to `main` deploys to production, and pushes to other branches get preview URLs.
+Live at **https://whatif.balaganentertainment.com** (also https://what-if-i-invested.vercel.app). The Vercel project `what-if-i-invested` is connected to this GitHub repo: every push to `main` deploys to production, and pushes to other branches get preview URLs.
 
 To set it up from scratch:
 
