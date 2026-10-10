@@ -92,6 +92,10 @@ Refresh the snapshots with `npm run snapshot` (or `node scripts/snapshot-fixture
 
 ## Deploying (Vercel)
 
+Live at **https://what-if-i-invested.vercel.app**. The Vercel project `what-if-i-invested` is connected to this GitHub repo: every push to `main` deploys to production, and pushes to other branches get preview URLs.
+
+To set it up from scratch:
+
 1. Push the repo and import it in Vercel (framework: Next.js).
 2. Set the environment variables: `MARKET_DATA_PROVIDER`, the provider key, and `NEXT_PUBLIC_SITE_URL=https://your-domain` (used for absolute Open Graph URLs).
 3. Deploy. `next.config.ts` already includes `data/fixtures` in the serverless bundle for the demo fallback.
