@@ -176,6 +176,7 @@ export const yahooProvider: MarketDataProvider = {
         dayHigh: raw(p.regularMarketDayHigh),
         dayLow: raw(p.regularMarketDayLow),
         volume: raw(p.regularMarketVolume),
+        marketCap: raw(p.marketCap),
         source: source(),
       };
     }

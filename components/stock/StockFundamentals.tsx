@@ -17,7 +17,7 @@ export function StockFundamentals({ symbol, quote }: { symbol: string; quote: Qu
     ["Open", price(quote?.open)],
     ["Day high", price(quote?.dayHigh)],
     ["Day low", price(quote?.dayLow)],
-    ["Market cap", moneyCompact(f?.market.marketCap)],
+    ["Market cap (what is the value of the company)", isFund ? "Fund — n/a" : moneyCompact(f?.market.marketCap)],
     ["P/E ratio (TTM)", f?.market.peRatio != null ? f.market.peRatio.toFixed(2) : "—"],
     ["EPS (TTM)", f?.market.eps != null ? price(f.market.eps) : "—"],
     ["Dividend yield", f?.market.dividendYield != null ? pct(f.market.dividendYield, { sign: false }) : "—"],

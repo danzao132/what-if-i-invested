@@ -1,6 +1,7 @@
 import type { Quote } from "@/lib/types";
 import { fmtTimestamp, pct, price } from "@/lib/format";
 import { TickerLogo } from "../ui/Logo";
+import { MarketCap } from "../ui/MarketCap";
 
 const FRESHNESS: Record<Quote["freshness"], { label: string; dot: string }> = {
   "real-time": { label: "Real-time", dot: "bg-gain" },
@@ -38,6 +39,7 @@ export function StockHeader({ quote, symbol, fallbackName }: { quote: Quote | nu
           <p className="mt-0.5 text-sm text-ink-3">
             <span className="font-semibold text-ink-2">{symbol}</span> · {quote.exchange || "US"} · {quote.type === "ETF" ? "ETF" : quote.type === "INDEX" ? "Index" : "Stock"} · {quote.currency}
           </p>
+          <MarketCap value={quote.marketCap} type={quote.type} className="mt-3" />
         </div>
       </div>
       <div className="sm:text-right">

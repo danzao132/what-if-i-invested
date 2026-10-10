@@ -2,7 +2,8 @@ import "server-only";
 import { computeInvestment, periodStartDay, type InvestmentResult } from "./engine/calc";
 import { dayFromISO } from "./engine/dates";
 import { prepareSeries, sampleIndices, type PreparedSeries } from "./engine/series";
-import { getHistory } from "./data";
+import { getHistory, getQuote } from "./data";
+import type { AssetType } from "./types";
 import { universeEntry } from "./data/universe";
 
 /**
@@ -28,11 +29,13 @@ export interface StockSummary {
   tenYear: InvestmentResult;
   spark: number[];
   demo: boolean;
+  marketCap?: number;
+  type?: AssetType;
 }
 
 export async function summarize(symbol: string): Promise<StockSummary | null> {
   try {
-    const s = await getPrepared(symbol);
+    const [s, quote] = await Promise.all([getPrepared(symbol), getQuote(symbol).catch(() => null)]);
     const n = s.days.length;
     const tenYear = computeInvestment(s, 1000, Math.max(s.days[0], periodStartDay(s, "10Y")), "price");
     const from = Math.max(0, n - 252);
@@ -44,6 +47,8 @@ export async function summarize(symbol: string): Promise<StockSummary | null> {
       tenYear,
       spark: sampleIndices(from, n - 1, 48).map((i) => s.price[i]),
       demo: s.history.source.kind === "demo",
+      marketCap: quote?.marketCap,
+      type: quote?.type ?? universeEntry(symbol)?.type,
     };
   } catch {
     return null;

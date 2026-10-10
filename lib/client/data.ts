@@ -82,6 +82,32 @@ export function useManySeries(symbols: string[]) {
   return state;
 }
 
+const quoteCache = new Map<string, Promise<Quote>>();
+function loadQuote(symbol: string): Promise<Quote> {
+  let p = quoteCache.get(symbol);
+  if (!p) {
+    p = getJSON<Quote>(`/api/quote/${encodeURIComponent(symbol)}`);
+    p.catch(() => quoteCache.delete(symbol));
+    quoteCache.set(symbol, p);
+  }
+  return p;
+}
+
+/** Quotes for several symbols; missing/failed ones are simply absent. */
+export function useManyQuotes(symbols: string[]) {
+  const key = symbols.join(",");
+  const [state, setState] = useState<Record<string, Quote>>({});
+  useEffect(() => {
+    let alive = true;
+    for (const s of symbols) loadQuote(s).then((q) => alive && setState((st) => ({ ...st, [s]: q })), () => {});
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  return state;
+}
+
 export const useQuote = (symbol: string | null) => useAsync(symbol, () => getJSON<Quote>(`/api/quote/${encodeURIComponent(symbol!)}`));
 
 export const useFundamentals = (symbol: string | null) =>

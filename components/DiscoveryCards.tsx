@@ -3,6 +3,7 @@ import { isoFromDay } from "@/lib/engine/dates";
 import type { ComputedScenario, StockSummary } from "@/lib/discovery";
 import { fmtDay, money, multiple, pct, price } from "@/lib/format";
 import { TickerLogo } from "./ui/Logo";
+import { MarketCap } from "./ui/MarketCap";
 
 export function Sparkline({ values, up, width = 96, height = 32 }: { values: number[]; up: boolean; width?: number; height?: number }) {
   if (values.length < 2) return null;
@@ -45,6 +46,7 @@ export function StockCard({ s }: { s: StockSummary }) {
           <span className={`text-xs font-semibold tnum ${up ? "text-gain" : "text-loss"}`}>{pct(r.totalReturn)}</span>
         </div>
       </div>
+      <MarketCap value={s.marketCap} type={s.type} size="sm" />
     </Link>
   );
 }

@@ -71,6 +71,8 @@ export interface Quote {
   dayHigh?: number;
   dayLow?: number;
   volume?: number;
+  /** Share price × shares outstanding; absent for funds and indices. */
+  marketCap?: number;
   source: DataSourceInfo;
 }
 

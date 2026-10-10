@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { computeInvestment, valuePath, type InvestmentResult } from "@/lib/engine/calc";
 import { addYears, dayFromISO, isoFromDay, todayInNewYork } from "@/lib/engine/dates";
 import { indexOnOrBefore, type PreparedSeries } from "@/lib/engine/series";
-import { useManySeries } from "@/lib/client/data";
+import { useManyQuotes, useManySeries } from "@/lib/client/data";
 import { universeEntry } from "@/lib/data/universe";
 import { fmtDay, money, moneyCompact, pct } from "@/lib/format";
 import type { ReturnMode } from "@/lib/types";
@@ -12,6 +12,7 @@ import { LineChart, type ChartSeries } from "../charts/LineChart";
 import { ShareResult } from "../ShareResult";
 import { StockSearch } from "../StockSearch";
 import { TickerLogo } from "../ui/Logo";
+import { MARKET_CAP_HINT } from "../ui/MarketCap";
 import { PRESETS } from "@/lib/parallel-presets";
 
 
@@ -46,6 +47,13 @@ export function ParallelUniverse({ initial }: { initial: ParallelInit }) {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [adding, setAdding] = useState(false);
   const loaded = useManySeries(symbols);
+  const quotes = useManyQuotes(symbols);
+  const capText = (sym: string) => {
+    const q = quotes[sym];
+    if (!q) return "…";
+    if (q.marketCap != null) return moneyCompact(q.marketCap);
+    return q.type === "EQUITY" ? "—" : "Fund — n/a";
+  };
 
   const day = dayFromISO(date);
 
@@ -257,6 +265,10 @@ export function ParallelUniverse({ initial }: { initial: ParallelInit }) {
             <thead>
               <tr className="text-xs text-ink-3">
                 {headerBtn("symbol", "Company", "text-left")}
+                <th className="pb-2 text-right font-medium">
+                  Market cap
+                  <div className="font-normal normal-case">{MARKET_CAP_HINT}</div>
+                </th>
                 <th className="pb-2 text-right font-medium">Invested</th>
                 {headerBtn("value", "Value today")}
                 {headerBtn("gain", "Gain / loss")}
@@ -279,6 +291,7 @@ export function ParallelUniverse({ initial }: { initial: ParallelInit }) {
                         </div>
                       </div>
                     </td>
+                    <td className="text-right tnum text-ink-2">{capText(r.symbol)}</td>
                     {ok ? (
                       <>
                         <td className="text-right tnum">{money(res!.amount)}</td>
@@ -316,6 +329,9 @@ export function ParallelUniverse({ initial }: { initial: ParallelInit }) {
                   <span className="h-2.5 w-2.5 rounded-full" style={{ background: r.color }} />
                   <span className="font-semibold">{r.symbol}</span>
                   <span className="truncate text-sm text-ink-3">{r.name}</span>
+                </div>
+                <div className="mt-1 text-xs text-ink-3">
+                  MARKET CAP <span className="normal-case">{MARKET_CAP_HINT}</span>: <b className="text-ink tnum">{capText(r.symbol)}</b>
                 </div>
                 {ok ? (
                   <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
